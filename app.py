@@ -1,24 +1,26 @@
-from flask import Flask
+from flask import Flask, render_template, request, jsonify
 import pusher
-from flask import render_template
-from flask import request
 
 app = Flask(__name__)
 
+# Ruta para el índice
 @app.route("/")
 def index():
-    return render_templates("app.html")
+    return render_template("app.html")  # Corregido: render_template en lugar de render_templates
 
+# Ruta para alumnos
 @app.route("/alumnos")
 def alumnos():
     return render_template("alumnos.html")
 
+# Ruta para guardar alumnos
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
-    matricula       =  request.form["txtMatriculaFA"]
-    nombreapellido  =  request.form["txtNombreApellidoFA"]
-    return f"Matrícula: {matricula}  Nombre y Apellido: {nombreapellido} "
+    matricula = request.form["txtMatriculaFA"]
+    nombreapellido = request.form["txtNombreApellidoFA"]
+    return f"Matrícula: {matricula}  Nombre y Apellido: {nombreapellido}"
 
+# Ruta para disparar el evento de Pusher
 @app.route("/evento")
 def eventoNuevo():
     pusher_client = pusher.Pusher(
@@ -35,4 +37,5 @@ def eventoNuevo():
     pusher_client.trigger('my-channel', 'my-event', {'message': message})
 
     # Devolver un mensaje que será recibido en el cliente
-    return jsonify({'status': 'success', 'message': 'Mensaje enviado correctamente.'}),
+    return jsonify({'status': 'success', 'message': 'Mensaje enviado correctamente.'})  # Corregido: retornar correctamente
+
