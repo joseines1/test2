@@ -29,4 +29,10 @@ def eventoNuevo():
       ssl=True
     )
 
-pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
+    message = "Este es un mensaje enviado desde Flask."
+
+    # Disparar el evento a través de Pusher
+    pusher_client.trigger('my-channel', 'my-event', {'message': message})
+
+    # Devolver un mensaje que será recibido en el cliente
+    return jsonify({'status': 'success', 'message': 'Mensaje enviado correctamente.'}),
