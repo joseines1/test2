@@ -1,5 +1,5 @@
 from flask import Flask
-
+import pusher
 from flask import render_template
 from flask import request
 
@@ -18,3 +18,15 @@ def alumnosGuardar():
     matricula       =  request.form["txtMatriculaFA"]
     nombreapellido  =  request.form["txtNombreApellidoFA"]
     return f"Matrícula: {matricula}  Nombre y Apellido: {nombreapellido} "
+
+@app.route("/evento")
+def eventoNuevo():
+    pusher_client = pusher.Pusher(
+      app_id='1768013',
+      key='93f016bf1fd53612e9ad',
+      secret='e6eef555c5cb98e94bee',
+      cluster='us2',
+      ssl=True
+    )
+
+pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
