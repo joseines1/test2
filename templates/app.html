@@ -15,11 +15,11 @@
 
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data) {
-      // Mostrar el mensaje recibido en formato JSON
-      document.getElementById('message').innerText = JSON.stringify(data);
+      // Insertar el mensaje recibido en la tabla
+      addMessageToTable(data.message);
     });
 
-    // Función para hacer fetch a la ruta /send-message
+    // Función para hacer fetch a la ruta /evento
     function sendMessage() {
       fetch('/evento', {
         method: 'POST',
@@ -34,6 +34,18 @@
         console.error('Error:', error);
       });
     }
+
+    // Función para agregar un mensaje a la tabla
+    function addMessageToTable(message) {
+      var table = document.getElementById('messageTable').getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(); // Crear una nueva fila
+
+      var cell1 = newRow.insertCell(0); // Insertar nueva celda
+      var cell2 = newRow.insertCell(1); // Insertar nueva celda
+
+      cell1.innerHTML = new Date().toLocaleString(); // Colocar la fecha y hora
+      cell2.innerHTML = message; // Colocar el mensaje
+    }
   </script>
 </head>
 <body>
@@ -45,13 +57,22 @@
   <!-- Botón para enviar el mensaje -->
   <button onclick="sendMessage()">Enviar Mensaje a Todos</button>
 
-  <!-- Donde se mostrará el mensaje recibido desde Pusher -->
-  <h2>Mensaje Recibido en Pusher:</h2>
-  <pre id="message"></pre>
+  <!-- Tabla para mostrar los mensajes recibidos -->
+  <h2>Mensajes Recibidos:</h2>
+  <table id="messageTable" border="1">
+    <thead>
+      <tr>
+        <th>Fecha y Hora</th>
+        <th>Mensaje</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí se insertarán las filas de los mensajes -->
+    </tbody>
+  </table>
 
   <!-- Donde se mostrará la respuesta del servidor Flask -->
   <h2>Respuesta del Servidor Flask:</h2>
   <pre id="response"></pre>
 </body>
 </html>
-
