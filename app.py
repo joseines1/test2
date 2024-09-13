@@ -34,7 +34,7 @@ def eventoNuevo():
     message = "Este es un mensaje enviado desde Flask."
 
     # Disparar el evento a través de Pusher
-    pusher_client.trigger('my-channel', 'my-event', {'message':"wewqeweqw"})
+    pusher_client.trigger('my-channel', 'my-event', {'message':"Luna no vale verga"})
 
     return jsonify(success=True)
 
