@@ -21,7 +21,7 @@ def alumnosGuardar():
     return f"Matrícula: {matricula}  Nombre y Apellido: {nombreapellido}"
 
 # Ruta para disparar el evento de Pusher
-@app.route("/evento")
+@app.route("/evento", methods=['POST'])
 def eventoNuevo():
     pusher_client = pusher.Pusher(
       app_id='1768013',
