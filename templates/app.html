@@ -18,10 +18,11 @@
     var pusher = new Pusher('93f016bf1fd53612e9ad', {
       cluster: 'us2'
     });
-
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
+    // canal conexion
+    var channel = pusher.subscribe('conexion');accion de la aplicacion
+    // evento: 
+    channel.bind('evento', function(data) {
+      alert("ya ocurrio el evento en la aplicacion");
     });
   </script>
 </head>
