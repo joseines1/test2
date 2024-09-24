@@ -21,9 +21,9 @@ pusher_client = pusher.Pusher(
     ssl=True
 )
 
-@app.route("/")
-def index():
-    return "<p>Hola, Mundo!</p>"
+#@app.route("/")
+#def index():
+ #   return "<p>Hola, Mundo!</p>"
 
 @app.route("/alumnos")
 def alumnos():
