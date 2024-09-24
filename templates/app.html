@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pusher Flask Test</title>
+  <title>Pagos del Curso - Envío de Comprobante</title>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
   <script>
     // Configuración de Pusher
@@ -13,61 +13,82 @@
       cluster: 'us2'
     });
 
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      // Insertar el mensaje recibido en la tabla
-      addMessageToTable(data.message);
+    var channel = pusher.subscribe('pagos-channel');
+    channel.bind('nuevo-pago', function(data) {
+      // Insertar el pago recibido en la tabla
+      addPaymentToTable(data.pago);
     });
 
-    // Función para hacer fetch a la ruta /evento
-    function sendMessage() {
-      fetch('/evento', {
+    // Función para hacer fetch a la ruta /pago
+    function sendPayment() {
+      var formData = new FormData();
+      var archivo = document.getElementById('comprobante').files[0]; // Obtener el archivo seleccionado
+      formData.append('comprobante', archivo);
+      formData.append('monto', document.getElementById('monto').value); // Añadir el monto
+      formData.append('estudiante', document.getElementById('estudiante').value); // Añadir el nombre del estudiante
+
+      fetch('/pago', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: formData
       }).then(response => response.json())
       .then(data => {
-        // Mostrar el mensaje de respuesta en el cliente
+        // Mostrar la confirmación de pago en el cliente
         document.getElementById('response').innerText = data.message;
       }).catch(error => {
         console.error('Error:', error);
       });
     }
 
-    // Función para agregar un mensaje a la tabla
-    function addMessageToTable(message) {
-      var table = document.getElementById('messageTable').getElementsByTagName('tbody')[0];
+    // Función para agregar un pago a la tabla
+    function addPaymentToTable(pago) {
+      var table = document.getElementById('paymentTable').getElementsByTagName('tbody')[0];
       var newRow = table.insertRow(); // Crear una nueva fila
 
-      var cell1 = newRow.insertCell(0); // Insertar nueva celda
-      var cell2 = newRow.insertCell(1); // Insertar nueva celda
+      var cell1 = newRow.insertCell(0); // Insertar nueva celda para la fecha y hora
+      var cell2 = newRow.insertCell(1); // Insertar nueva celda para el monto
+      var cell3 = newRow.insertCell(2); // Insertar nueva celda para el estudiante
+      var cell4 = newRow.insertCell(3); // Insertar nueva celda para el comprobante
 
-      cell1.innerHTML = new Date().toLocaleString(); // Colocar la fecha y hora
-      cell2.innerHTML = message; // Colocar el mensaje
+      cell1.innerHTML = new Date().toLocaleString(); // Colocar la fecha y hora del pago
+      cell2.innerHTML = pago.monto; // Colocar el monto del pago
+      cell3.innerHTML = pago.estudiante; // Colocar el nombre del estudiante
+      cell4.innerHTML = `<a href="${pago.comprobante}" target="_blank">Ver Comprobante</a>`; // Enlace al comprobante de pago
     }
   </script>
 </head>
 <body>
-  <h1>Pusher Flask Test</h1>
+  <h1>Pagos del Curso - Envío de Comprobante</h1>
   <p>
-    Pulsa el botón para enviar un mensaje a través del servidor Flask y Pusher.
+    Completa el formulario y sube un comprobante para registrar un nuevo pago.
   </p>
 
-  <!-- Botón para enviar el mensaje -->
-  <button onclick="sendMessage()">Enviar Mensaje a Todos</button>
+  <!-- Formulario para enviar el pago -->
+  <form id="paymentForm">
+    <label for="monto">Monto:</label>
+    <input type="number" id="monto" name="monto" required><br><br>
 
-  <!-- Tabla para mostrar los mensajes recibidos -->
-  <h2>Mensajes Recibidos:</h2>
-  <table id="messageTable" border="1">
+    <label for="estudiante">Nombre del Estudiante:</label>
+    <input type="text" id="estudiante" name="estudiante" required><br><br>
+
+    <label for="comprobante">Subir Comprobante (imagen o PDF):</label>
+    <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf" required><br><br>
+
+    <button type="button" onclick="sendPayment()">Registrar Pago con Comprobante</button>
+  </form>
+
+  <!-- Tabla para mostrar los pagos recibidos -->
+  <h2>Pagos Recibidos:</h2>
+  <table id="paymentTable" border="1">
     <thead>
       <tr>
         <th>Fecha y Hora</th>
-        <th>Mensaje</th>
+        <th>Monto</th>
+        <th>Estudiante</th>
+        <th>Comprobante</th>
       </tr>
     </thead>
     <tbody>
-      <!-- Aquí se insertarán las filas de los mensajes -->
+      <!-- Aquí se insertarán las filas de los pagos -->
     </tbody>
   </table>
 
