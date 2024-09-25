@@ -25,7 +25,7 @@ pusher_client = pusher.Pusher(
 #def index():
  #   return "<p>Hola, Mundo!</p>"
 
-@app.route("/")
+@app.route("/app.html")
 def index():
     cursor = con.cursor(dictionary=True)
     
