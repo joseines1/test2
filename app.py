@@ -40,7 +40,7 @@ def index():
     cursor.close()
 
     # Pasar los registros a la plantilla alumnos.html
-    return render_template("index.html", registros=registros)
+    return render_template("app.html", registros=registros)
 
 # Ruta para insertar un nuevo registro
 @app.route("/insertar", methods=["POST"])
