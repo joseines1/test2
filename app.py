@@ -25,8 +25,8 @@ pusher_client = pusher.Pusher(
 #def index():
  #   return "<p>Hola, Mundo!</p>"
 
-@app.route("/")
-def index():
+@app.route("/alumnos")
+def alumnos():
     cursor = con.cursor(dictionary=True)
     
     # Consulta a la base de datos
