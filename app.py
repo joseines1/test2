@@ -25,7 +25,7 @@ pusher_client = pusher.Pusher(
 #def index():
  #   return "<p>Hola, Mundo!</p>"
 
-@app.route("/app.html")
+@app.route("/")
 def index():
     cursor = con.cursor(dictionary=True)
     
@@ -40,7 +40,7 @@ def index():
     cursor.close()
 
     # Pasar los registros a la plantilla alumnos.html
-    return render_template("alumnos.html", registros=registros)
+    return render_template("index.html", registros=registros)
 
 # Ruta para insertar un nuevo registro
 @app.route("/insertar", methods=["POST"])
