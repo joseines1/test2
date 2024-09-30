@@ -27,8 +27,12 @@ def index():
 
 @app.route("/alumnos")
 def alumnos():
+
+    if not con.is_connected():
+        con.reconnect()
+
     cursor = con.cursor(dictionary=True)
-    
+
     # Consulta a la base de datos
     query = "SELECT * FROM tst0_cursos_pagos"
     cursor.execute(query)
@@ -50,6 +54,10 @@ def insertar():
     archivo = request.form['Archivo']
     
     try:
+
+        
+        if not con.is_connected():
+            con.reconnect() 
         cursor = con.cursor(dictionary=True)
         query = "INSERT INTO tst0_cursos_pagos (Id_Curso_Pago, Telefono, Archivo) VALUES (%s, %s, %s)"
         cursor.execute(query, (id_curso_pago, telefono, archivo))
