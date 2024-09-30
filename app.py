@@ -21,12 +21,12 @@ pusher_client = pusher.Pusher(
     ssl=True
 )
 
-#@app.route("/")
-#def index():
- #   return "<p>Hola, Mundo!</p>"
-
 @app.route("/")
 def index():
+    return "<p>Hola, Mundo!</p>"
+
+@app.route("/alumnos")
+def alumnos():
     cursor = con.cursor(dictionary=True)
     
     # Consulta a la base de datos
@@ -40,7 +40,7 @@ def index():
     cursor.close()
 
     # Pasar los registros a la plantilla alumnos.html
-    return render_template("app.html", registros=registros)
+    return render_template("alumnos.html", registros=registros)
 
 # Ruta para insertar un nuevo registro
 @app.route("/insertar", methods=["POST"])
@@ -49,21 +49,32 @@ def insertar():
     telefono = request.form['Telefono']
     archivo = request.form['Archivo']
     
-    cursor = con.cursor(dictionary=True)
-    query = "INSERT INTO tst0_cursos_pagos (Id_Curso_Pago, Telefono, Archivo) VALUES (%s, %s, %s)"
-    cursor.execute(query, (id_curso_pago, telefono, archivo))
-    con.commit()
+    try:
+        cursor = con.cursor(dictionary=True)
+        query = "INSERT INTO tst0_cursos_pagos (Id_Curso_Pago, Telefono, Archivo) VALUES (%s, %s, %s)"
+        cursor.execute(query, (id_curso_pago, telefono, archivo))
+        con.commit()
 
-    # Notificar a través de Pusher
-    pusher_client.trigger('my-channel', 'my-event', {
-        'Id_Curso_Pago': id_curso_pago,
-        'Telefono': telefono,
-        'Archivo': archivo
-    })
+        # Notificar a través de Pusher
+        pusher_client.trigger('my-channel', 'my-event', {
+            'Id_Curso_Pago': id_curso_pago,
+            'Telefono': telefono,
+            'Archivo': archivo
+        })
 
-    cursor.close()
+        cursor.close()
+    except mysql.connector.Error as err:
+        return jsonify({"status": "error", "message": str(err)})
 
     return redirect("/alumnos")
+
+@app.route("/ping")
+def ping():
+    try:
+        con.ping(reconnect=True, attempts=3, delay=5)
+        return jsonify({"status": "success", "message": "Conexión a la base de datos exitosa"})
+    except mysql.connector.Error as err:
+        return jsonify({"status": "error", "message": str(err)})
 
 if __name__ == "__main__":
     app.run(debug=True)
