@@ -105,6 +105,7 @@ def eliminar(Id_Curso_Pago):
         return jsonify({"status": "error", "message": str(err)})
 
     return redirect("/alumnos")
+    
 @app.route("/editar", methods=["POST"])
 def editar():
     id_curso_pago = request.form['Id_Curso_Pago']
