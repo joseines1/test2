@@ -80,6 +80,7 @@ def insertar():
 
     return redirect("/alumnos")
 
+
 # Ruta para eliminar un registro por ID
 @app.route("/eliminar/<int:Id_Curso_Pago>", methods=["POST"])
 def eliminar(Id_Curso_Pago):
