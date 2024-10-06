@@ -219,19 +219,35 @@
 
     <i id="cambiarColorIcon" class="fas fa-adjust" style="font-size: 24px; cursor: pointer;"></i>
 
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+      <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
         var pusher = new Pusher('93f016bf1fd53612e9ad', {
             cluster: 'us2'
         });
 
         var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function(data) {
+
+        // Función para actualizar la página
+        function refreshPage() {
+            window.location.reload(); // Recarga la página
+        }
+
+        // Lógica para manejar la edición y eliminación
+        function handleEditSuccess() {
+            refreshPage(); // Actualiza la página después de una edición exitosa
+        }
+
+        function handleDeleteSuccess() {
+            refreshPage(); // Actualiza la página después de una eliminación exitosa
+        }
+
+        channel.bind('delete-event', function(data) {
             var row = document.getElementById('row-' + data.Id_Curso_Pago);
             if (row) {
-                row.cells[1].innerText = data.Telefono;
-                row.cells[2].innerText = data.Archivo;
-            } else {
+                row.remove(); // Eliminar la fila de la tabla
+            }
+            handleDeleteSuccess(); // Llama a esta función para actualizar la página
+            });{
                 var newRow = `<tr id="row-${data.Id_Curso_Pago}">
                                 <td>${data.Id_Curso_Pago}</td>
                                 <td>${data.Telefono}</td>
@@ -245,6 +261,14 @@
                               </tr>`;
                 document.getElementById('registros').innerHTML += newRow;
             }
+            handleEditSuccess(); // Llama a esta función para actualizar la página;
+
+        channel.bind('delete-event', function(data) {
+            var row = document.getElementById('row-' + data.Id_Curso_Pago);
+            if (row) {
+                row.remove(); // Eliminar la fila de la tabla
+            }
+            handleDeleteSuccess(); // Llama a esta función para actualizar la página
         });
 
         function openEditModal(id, telefono, archivo) {
@@ -269,6 +293,7 @@
         function closeEditModal() {
             document.getElementById('editModal').style.display = 'none';
         }
+
 
         // Cargar color de fondo almacenado en localStorage al cargar la página
         document.addEventListener('DOMContentLoaded', function () {
