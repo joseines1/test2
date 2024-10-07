@@ -27,7 +27,6 @@ def index():
 
 @app.route("/alumnos")
 def alumnos():
-
     if not con.is_connected():
         con.reconnect()
 
@@ -50,7 +49,7 @@ def alumnos():
 def ver_todos():
     return redirect("/alumnos")
 
-# Ruta para insertar un nuevo registro
+# Ruta para insertar un nuevo registro usando POST (desde un formulario)
 @app.route("/insertar", methods=["POST"])
 def insertar():
     id_curso_pago = request.form['Id_Curso_Pago']
@@ -58,7 +57,6 @@ def insertar():
     archivo = request.form['Archivo']
     
     try:
-
         if not con.is_connected():
             con.reconnect() 
         cursor = con.cursor(dictionary=True)
@@ -80,7 +78,36 @@ def insertar():
     return redirect("/alumnos")
 
 
-# Ruta para eliminar un registro por ID
+# Ruta para insertar un nuevo registro usando GET (desde la URL)
+@app.route("/insertar_url", methods=["GET"])
+def insertar_url():
+    id_curso_pago = request.args.get('Id_Curso_Pago')
+    telefono = request.args.get('Telefono')
+    archivo = request.args.get('Archivo')
+    
+    try:
+        if not con.is_connected():
+            con.reconnect() 
+        cursor = con.cursor(dictionary=True)
+        query = "INSERT INTO tst0_cursos_pagos (Id_Curso_Pago, Telefono, Archivo) VALUES (%s, %s, %s)"
+        cursor.execute(query, (id_curso_pago, telefono, archivo))
+        con.commit()
+
+        # Notificar a través de Pusher
+        pusher_client.trigger('my-channel', 'my-event', {
+            'Id_Curso_Pago': id_curso_pago,
+            'Telefono': telefono,
+            'Archivo': archivo
+        })
+
+        cursor.close()
+    except mysql.connector.Error as err:
+        return jsonify({"status": "error", "message": str(err)})
+
+    return jsonify({"status": "success", "message": "Registro insertado correctamente"})
+
+
+# Ruta para eliminar un registro por ID usando POST (desde un formulario)
 @app.route("/eliminar/<int:Id_Curso_Pago>", methods=["POST"])
 def eliminar(Id_Curso_Pago):
     try:
@@ -104,7 +131,37 @@ def eliminar(Id_Curso_Pago):
         return jsonify({"status": "error", "message": str(err)})
 
     return redirect("/alumnos")
+
+
+# Ruta para eliminar un registro por ID usando GET (desde la URL)
+@app.route("/eliminar_url", methods=["GET"])
+def eliminar_url():
+    id_curso_pago = request.args.get('Id_Curso_Pago')
     
+    try:
+        if not con.is_connected():
+            con.reconnect()
+
+        cursor = con.cursor(dictionary=True)
+        
+        # Consulta SQL para eliminar un registro por su ID
+        query = "DELETE FROM tst0_cursos_pagos WHERE Id_Curso_Pago = %s"
+        cursor.execute(query, (id_curso_pago,))
+        con.commit()
+
+        # Notificar a través de Pusher que un registro ha sido eliminado
+        pusher_client.trigger('my-channel', 'delete-event', {
+            'Id_Curso_Pago': id_curso_pago
+        })
+
+        cursor.close()
+    except mysql.connector.Error as err:
+        return jsonify({"status": "error", "message": str(err)})
+
+    return jsonify({"status": "success", "message": "Registro eliminado correctamente"})
+
+    
+# Ruta para editar un registro (manteniendo solo POST)
 @app.route("/editar", methods=["POST"])
 def editar():
     id_curso_pago = request.form['Id_Curso_Pago']
@@ -135,6 +192,7 @@ def editar():
     
     return redirect("/alumnos")
 
+# Ruta para buscar registros (manteniendo solo GET)
 @app.route("/buscar", methods=["GET"])
 def buscar():
     search_query = request.args.get('query', '')
@@ -165,4 +223,4 @@ def ping():
         return jsonify({"status": "error", "message": str(err)})
 
 if __name__ == "__main__":
-    app.run(debug=True) 
+    app.run(debug=True)
