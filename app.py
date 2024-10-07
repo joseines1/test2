@@ -27,6 +27,7 @@ def index():
 
 @app.route("/alumnos")
 def alumnos():
+
     if not con.is_connected():
         con.reconnect()
 
@@ -49,14 +50,15 @@ def alumnos():
 def ver_todos():
     return redirect("/alumnos")
 
-# Ruta para insertar un nuevo registro desde la URL (GET)
-@app.route("/insertar", methods=["GET"])
+# Ruta para insertar un nuevo registro
+@app.route("/insertar", methods=["POST"])
 def insertar():
-    id_curso_pago = request.args.get('Id_Curso_Pago')
-    telefono = request.args.get('Telefono')
-    archivo = request.args.get('Archivo')
+    id_curso_pago = request.form['Id_Curso_Pago']
+    telefono = request.form['Telefono']
+    archivo = request.form['Archivo']
     
     try:
+
         if not con.is_connected():
             con.reconnect() 
         cursor = con.cursor(dictionary=True)
@@ -75,14 +77,12 @@ def insertar():
     except mysql.connector.Error as err:
         return jsonify({"status": "error", "message": str(err)})
 
-    return jsonify({"status": "success", "message": "Registro insertado correctamente"})
+    return redirect("/alumnos")
 
 
-# Ruta para eliminar un registro por ID desde la URL (GET)
-@app.route("/eliminar", methods=["GET"])
-def eliminar():
-    id_curso_pago = request.args.get('Id_Curso_Pago')
-    
+# Ruta para eliminar un registro por ID
+@app.route("/eliminar/<int:Id_Curso_Pago>", methods=["POST"])
+def eliminar(Id_Curso_Pago):
     try:
         if not con.is_connected():
             con.reconnect()
@@ -91,27 +91,25 @@ def eliminar():
         
         # Consulta SQL para eliminar un registro por su ID
         query = "DELETE FROM tst0_cursos_pagos WHERE Id_Curso_Pago = %s"
-        cursor.execute(query, (id_curso_pago,))
+        cursor.execute(query, (Id_Curso_Pago,))
         con.commit()
 
         # Notificar a través de Pusher que un registro ha sido eliminado
         pusher_client.trigger('my-channel', 'delete-event', {
-            'Id_Curso_Pago': id_curso_pago
+            'Id_Curso_Pago': Id_Curso_Pago
         })
 
         cursor.close()
     except mysql.connector.Error as err:
         return jsonify({"status": "error", "message": str(err)})
 
-    return jsonify({"status": "success", "message": "Registro eliminado correctamente"})
-
+    return redirect("/alumnos")
     
-# Ruta para editar un registro desde la URL (GET)
-@app.route("/editar", methods=["GET"])
+@app.route("/editar", methods=["POST"])
 def editar():
-    id_curso_pago = request.args.get('Id_Curso_Pago')
-    telefono = request.args.get('Telefono')
-    archivo = request.args.get('Archivo')
+    id_curso_pago = request.form['Id_Curso_Pago']
+    telefono = request.form['Telefono']
+    archivo = request.form['Archivo']
     
     try:
         if not con.is_connected():
@@ -135,9 +133,8 @@ def editar():
     except mysql.connector.Error as err:
         return jsonify({"status": "error", "message": str(err)})
     
-    return jsonify({"status": "success", "message": "Registro actualizado correctamente"})
+    return redirect("/alumnos")
 
-# Ruta para buscar registros desde la URL (GET)
 @app.route("/buscar", methods=["GET"])
 def buscar():
     search_query = request.args.get('query', '')
@@ -168,5 +165,4 @@ def ping():
         return jsonify({"status": "error", "message": str(err)})
 
 if __name__ == "__main__":
-    app.run(debug=True)
-
+    app.run(debug=True) 
