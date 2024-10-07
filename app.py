@@ -59,7 +59,6 @@ def insertar():
     
     try:
 
-        
         if not con.is_connected():
             con.reconnect() 
         cursor = con.cursor(dictionary=True)
@@ -167,5 +166,3 @@ def ping():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
