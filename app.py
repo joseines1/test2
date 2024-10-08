@@ -163,7 +163,7 @@ def eliminar_url():
     except mysql.connector.Error as err:
         return jsonify({"status": "error", "message": str(err)})
 
-    return jsonify({"status": "success", "message": "Registro eliminado correctamente"})
+    return redirect('/alumnos')
  
 @app.route("/editar", methods=["POST"])
 def editar():
