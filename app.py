@@ -137,7 +137,12 @@ def eliminar(Id_Curso_Pago):
 @app.route("/eliminar_url", methods=["GET"])
 def eliminar_url():
     id_curso_pago = request.args.get('Id_Curso_Pago')
-    
+
+    if not id_curso_pago:
+        return jsonify({"status": "error", "message": "Id_Curso_Pago no proporcionado"}), 400
+
+    print(id_curso_pago)  # Debug para verificar el valor
+
     try:
         if not con.is_connected():
             con.reconnect()
@@ -159,9 +164,7 @@ def eliminar_url():
         return jsonify({"status": "error", "message": str(err)})
 
     return jsonify({"status": "success", "message": "Registro eliminado correctamente"})
-
-    
-# Ruta para editar un registro (manteniendo solo POST)
+ 
 @app.route("/editar", methods=["POST"])
 def editar():
     id_curso_pago = request.form['Id_Curso_Pago']
