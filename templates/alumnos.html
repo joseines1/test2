@@ -4,175 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registros de Alumnos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" >
-    <style>
-        body {
-            background-color: aqua;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .form-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 400px;
-        }
-        .form-group {
-            display: flex;
-            justify-content: space-between; /* Espaciado entre el label y el input */
-            width: 100%;
-            margin-bottom: 15px;
-        }
-        .form-group {
-    display: flex; /* Cambia a flex para alinear horizontalmente */
-    align-items: center; /* Alinea verticalmente los elementos al centro */
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    margin-right: 10px; /* Espacio entre la etiqueta y el input */
-    width: 150px; /* Ancho fijo para los labels */
-}
-
-.form-group input {
-    flex-grow: 1; /* Permite que el input ocupe el espacio restante */
-    padding: 10px 15px;
-    border: 2px solid #000;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box; /* Para incluir el padding y el border en el ancho total */
-}
-
-.button-group {
-    margin-top: 20px; /* Espacio superior para los botones */
-}
-        button {
-            background-color: #00ff9d;
-            color: #000;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        button:hover {
-            background-color: #00cc80;
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        button:active {
-            background-color: #00b36b;
-            transform: scale(0.98);
-        }
-        .button-group {
-            display: flex;
-            justify-content: flex-end;
-            width: 100%;
-        }
-        table {
-            border-collapse: collapse;
-            margin-top: 20px;
-            width: 80%;
-            border: 2px solid #000;
-        }
-        th, td {
-            border: 1px solid #000;
-            padding: 10px;
-            text-align: center;
-        }
-        .delete-button, .edit-button {
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .delete-button {
-            background-color: #ff4c4c;
-            color: white;
-        }
-        .delete-button:hover {
-            background-color: #ff1c1c;
-        }
-        .delete-button:active {
-            background-color: #e60000;
-        }
-        .edit-button {
-            background-color: #ffb84d;
-            color: black;
-        }
-        .edit-button:hover {
-            background-color: #ffa31a;
-        }
-        .edit-button:active {
-            background-color: #e68a00;
-        }
-        #editModal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #000;
-            background-color: aqua;
-            padding: 20px;
-            z-index: 1000;
-        }
-    </style>
+    <!-- Agregar enlace a Font Awesome para usar íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <h1>Registros de Pagos de Alumnos</h1>
 
-    <form id="searchForm" action="/buscar" method="GET">
-        <div class="form-container">
-            <div class="form-group">
-                <label for="query">Buscar:</label>
-                <input type="text" name="query" id="query" placeholder="ID, Teléfono o Archivo" >
-            </div>
-            <div class="button-group">
-                <button type="submit">Buscar</button>
-                <a href="/ver_todos" style="margin-left: 10px;">
-                    <button type="button">Ver Todos</button>
-                </a>
-            </div>
-        </div>        
+    <!-- Formulario para agregar un nuevo registro -->
+    <form id="registroForm" action="/insertar" method="POST">
+        <label for="id_curso_pago">ID Curso Pago:</label>
+        <input type="text" id="id_curso_pago" name="Id_Curso_Pago" required>
+        <br>
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" name="Telefono" required>
+        <br>
+        <label for="archivo">Archivo:</label>
+        <input type="text" id="archivo" name="Archivo" required>
+        <br>
+        <button type="submit">Agregar Registro</button>
     </form>
-
-        <form id="registroForm" action="/insertar" method="POST">
-            <div class="form-group">
-                <label for="id_curso_pago">ID Curso Pago:</label>
-                <input type="number" id="id_curso_pago" name="Id_Curso_Pago" >
-            </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" name="Telefono" >
-            </div>
-            <div class="form-group">
-                <label for="archivo">Archivo:</label>
-                <input type="text" id="archivo" name="Archivo" >
-            </div>
-            <div class="button-group">
-                <button type="submit">Agregar Registro</button>
-            </div>
-        </form>
-        
 
     <hr>
 
-    <table>
+    <table border="12">
         <thead>
             <tr>
                 <th>ID Curso Pago</th>
@@ -183,160 +37,56 @@
         </thead>
         <tbody id="registros">
             {% for registro in registros %}
-            <tr id="row-{{ registro.Id_Curso_Pago }}">
+            <tr>
                 <td>{{ registro.Id_Curso_Pago }}</td>
                 <td>{{ registro.Telefono }}</td>
                 <td>{{ registro.Archivo }}</td>
                 <td>
-                    
-                    <button class="edit-button" onclick="openEditModal('{{ registro.Id_Curso_Pago }}', '{{ registro.Telefono }}', '{{ registro.Archivo }}')">Editar</button>
+                    <!-- Formulario para eliminar el registro -->
+                    <form action="/eliminar/{{ registro.Id_Curso_Pago }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-button" style="background-color: red; color: white;">Eliminar</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <div id="editModal">
-        <h2>Editar Registro</h2>
-        <form id="editForm" action="/editar" method="POST">
-            <input type="hidden" id="editId" name="Id_Curso_Pago">
-            <div class="form-group">
-                <label for="editTelefono">Teléfono:</label>
-                <input type="text" id="editTelefono" name="Telefono" required>
-            </div>
-            <div class="form-group">
-                <label for="editArchivo">Archivo:</label>
-                <input type="text" id="editArchivo" name="Archivo" required>
-            </div>
-            <div class="button-group">
-                <button type="submit">Guardar Cambios</button>
-                <button type="button" onclick="closeEditModal()">Cancelar</button>
-            </div>
-        </form>
-    </div>
-
+    <!-- Ícono para cambiar el color de fondo -->
     <i id="cambiarColorIcon" class="fas fa-adjust" style="font-size: 24px; cursor: pointer;"></i>
-    <div class="button-group" style="margin-top: 30px;">
-    <button id="deleteAllButton" class="delete-button">Eliminar Todos los Registros</button>
-</div>
 
-      <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
+        // Configurar Pusher
         var pusher = new Pusher('93f016bf1fd53612e9ad', {
             cluster: 'us2'
         });
 
         var channel = pusher.subscribe('my-channel');
-
-        // Función para actualizar la página
-        function refreshPage() {
-            window.location.reload(); // Recarga la página
-        }
-
-        // Lógica para manejar la edición y eliminación
-        function handleEditSuccess() {
-            refreshPage(); // Actualiza la página después de una edición exitosa
-        }
-
-        function handleDeleteSuccess() {
-            refreshPage(); // Actualiza la página después de una eliminación exitosa
-        }
-
-        channel.bind('delete-event', function(data) {
-            var row = document.getElementById('row-' + data.Id_Curso_Pago);
-            if (row) {
-                row.remove(); // Eliminar la fila de la tabla
-            }
-            handleDeleteSuccess(); // Llama a esta función para actualizar la página
-            });{
-                var newRow = `<tr id="row-${data.Id_Curso_Pago}">
-                                <td>${data.Id_Curso_Pago}</td>
-                                <td>${data.Telefono}</td>
-                                <td>${data.Archivo}</td>
-                                <td>
-                                    <form action="/eliminar/${data.Id_Curso_Pago}" method="POST" style="display:inline;">
-                                        <button type="submit" class="delete-button">Eliminar</button>
-                                    </form>
-                                    <button class="edit-button" onclick="openEditModal('${data.Id_Curso_Pago}', '${data.Telefono}', '${data.Archivo}')">Editar</button>
-                                </td>
-                              </tr>`;
-                document.getElementById('registros').innerHTML += newRow;
-            }
-            handleEditSuccess(); // Llama a esta función para actualizar la página;
-
-        channel.bind('delete-event', function(data) {
-            var row = document.getElementById('row-' + data.Id_Curso_Pago);
-            if (row) {
-                row.remove(); // Eliminar la fila de la tabla
-            }
-            handleDeleteSuccess(); // Llama a esta función para actualizar la página
+        channel.bind('my-event', function(data) {
+            // Insertar nuevo registro en la tabla sin recargar la página
+            var newRow = `<tr>
+                            <td>${data.Id_Curso_Pago}</td>
+                            <td>${data.Telefono}</td>
+                            <td>${data.Archivo}</td>`;
+            document.getElementById('registros').innerHTML += newRow;
         });
 
-        function openEditModal(id, telefono, archivo) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editTelefono').value = telefono;
-            document.getElementById('editArchivo').value = archivo;
+        // Cambiar el color de fondo entre negro y el color original con un ícono
+        var isBlack = false; // Variable para alternar entre colores
+        var originalColor = document.body.style.backgroundColor; // Guardar color original
+        var originalTextColor = document.body.style.color; // Guardar el color original del texto
 
-            var isBlack = localStorage.getItem('isBlack') === 'true';
-
-            // Cambiar el color del modal
+        document.getElementById('cambiarColorIcon').addEventListener('click', function() {
             if (isBlack) {
-                document.getElementById('editModal').style.backgroundColor = 'black';
-                document.getElementById('editModal').style.color = 'white';
+                document.body.style.backgroundColor = originalColor; // Volver al color original
+                document.body.style.color = originalTextColor; // Volver al color de texto original
             } else {
-                document.getElementById('editModal').style.backgroundColor = 'aqua';
-                document.getElementById('editModal').style.color = 'black';
+                document.body.style.backgroundColor = 'black'; // Cambiar a negro
+                document.body.style.color = 'white'; // Cambiar el texto a blanco
             }
-
-            document.getElementById('editModal').style.display = 'block';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
-
-
-        // Cargar color de fondo almacenado en localStorage al cargar la página
-        document.addEventListener('DOMContentLoaded', function () {
-            var isBlack = localStorage.getItem('isBlack') === 'true';
-
-            if (isBlack) {
-                document.body.style.backgroundColor = 'black';
-                document.body.style.color = 'white';
-                document.getElementById('editModal').style.backgroundColor = 'black';
-                document.getElementById('editModal').style.color = 'white';
-            } else {
-                document.body.style.backgroundColor = 'aqua';
-                document.body.style.color = 'black';
-                document.getElementById('editModal').style.backgroundColor = 'aqua';
-                document.getElementById('editModal').style.color = 'black';
-            }
-
-            document.getElementById('deleteAllButton').addEventListener('click', function () {
-   
-});
-
-        });
-
-        // Cambiar color de fondo al hacer clic en el icono
-        document.getElementById('cambiarColorIcon').addEventListener('click', function () {
-            var isBlack = localStorage.getItem('isBlack') === 'true';
-
-            if (isBlack) {
-                document.body.style.backgroundColor = 'aqua';
-                document.body.style.color = 'black';
-                document.getElementById('editModal').style.backgroundColor = 'aqua';
-                document.getElementById('editModal').style.color = 'black';
-                localStorage.setItem('isBlack', 'false');
-            } else {
-                document.body.style.backgroundColor = 'black';
-                document.body.style.color = 'white';
-                document.getElementById('editModal').style.backgroundColor = 'black';
-                document.getElementById('editModal').style.color = 'white';
-                localStorage.setItem('isBlack', 'true');
-            }
+            isBlack = !isBlack; // Cambiar el estado
         });
     </script>
 </body>
 </html>
-
