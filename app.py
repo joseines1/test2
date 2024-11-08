@@ -88,6 +88,18 @@ def insertar():
 
     return redirect("/alumnos")
 
+app.post('/eliminar_todos', (req, res) => {
+    // Aquí iría el código para eliminar todos los registros de la base de datos
+    // Por ejemplo, si usas MongoDB con Mongoose:
+    Registro.deleteMany({})
+        .then(() => {
+            res.status(200).send("Todos los registros han sido eliminados.");
+        })
+        .catch((error) => {
+            console.error("Error al eliminar los registros:", error);
+            res.status(500).send("Error al eliminar los registros.");
+        });
+});
 
 # Ruta para insertar un nuevo registro usando GET (desde la URL)
 @app.route("/insertar_url", methods=["GET"])
