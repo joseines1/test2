@@ -195,9 +195,7 @@
             {% endfor %}
         </tbody>
     </table>
-<form action="/eliminar/{{ registro.Id_Curso_Pago }}" method="POST" style="display:inline;">
-                        <button type="submit" class="delete-button">Eliminar</button>
-                    </form>
+
     <div id="editModal">
         <h2>Editar Registro</h2>
         <form id="editForm" action="/editar" method="POST">
@@ -315,23 +313,7 @@
             }
 
             document.getElementById('deleteAllButton').addEventListener('click', function () {
-    if (confirm("¿Estás seguro de que quieres eliminar todos los registros? Esta acción no se puede deshacer.")) {
-        fetch('/eliminar_todos', {
-            method: 'POST'
-        })
-        .then(response => {
-            if (response.ok) {
-                // Elimina todas las filas de la tabla después de una eliminación exitosa
-                document.getElementById('registros').innerHTML = '';
-                alert("Todos los registros han sido eliminados.");
-            } else {
-                alert("Hubo un problema al intentar eliminar los registros.");
-            }
-        })
-        .catch(error => {
-            console.error("Error al eliminar todos los registros:", error);
-        });
-    }
+   
 });
 
         });
