@@ -31,8 +31,6 @@ app.post('/eliminar_todos', (req, res) => {
             console.error("Error al eliminar los registros:", error);
             res.status(500).send("Error al eliminar los registros.");
         });
-});
-
 
 @app.route("/")
 def index():
