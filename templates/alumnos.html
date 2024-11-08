@@ -188,16 +188,16 @@
                 <td>{{ registro.Telefono }}</td>
                 <td>{{ registro.Archivo }}</td>
                 <td>
-                    <form action="/eliminar/{{ registro.Id_Curso_Pago }}" method="POST" style="display:inline;">
-                        <button type="submit" class="delete-button">Eliminar</button>
-                    </form>
+                    
                     <button class="edit-button" onclick="openEditModal('{{ registro.Id_Curso_Pago }}', '{{ registro.Telefono }}', '{{ registro.Archivo }}')">Editar</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
+<form action="/eliminar/{{ registro.Id_Curso_Pago }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-button">Eliminar</button>
+                    </form>
     <div id="editModal">
         <h2>Editar Registro</h2>
         <form id="editForm" action="/editar" method="POST">
